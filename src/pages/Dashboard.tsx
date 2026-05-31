@@ -1,20 +1,9 @@
 import BirthdayCard from "@/components/BirthdayCard"
 import StatsCard from "@/components/StatsCard"
-
-import { getAge } from "@/utils/dateUtils"
-
-import { daysUntilBirthday } from "@/utils/dateUtils"
-
 import { useDashboard } from "@/hooks/useDashboard"
-
 import { notify } from "@/services/notificationService"
-
-import {
-    buildTodayMessage,
-    wasNotificationSentToday,
-    markNotificationSent,
-} from "@/utils/notificationUtils"
-import { useEffect } from "react"
+import UpcomingBirthdayCard from "@/components/UpcomingBirthdayCard"
+import { useBirthdayNotifications } from "@/hooks/useBirthdayNotifications"
 
 export default function Dashboard() {
 
@@ -29,37 +18,7 @@ export default function Dashboard() {
         mostCommonMonth,
     } = useDashboard()
 
-    useEffect(() => {
-
-        if (
-            todaysBirthdays.length === 0
-        ) {
-            return
-        }
-
-        if (
-            wasNotificationSentToday()
-        ) {
-            return
-        }
-
-        const message =
-            buildTodayMessage(
-                todaysBirthdays
-            )
-
-        if (!message) {
-            return
-        }
-
-        notify(
-            "Today's Birthdays",
-            message
-        )
-
-        markNotificationSent()
-
-    }, [todaysBirthdays])
+    useBirthdayNotifications(todaysBirthdays)
 
     return (
         <div className="space-y-6">
@@ -145,47 +104,15 @@ export default function Dashboard() {
                     </div>
                 ) : (
                     <div className="grid gap-4">
-                        {upcomingThisWeek.map(
-                            (birthday) => (
-                                <div
-                                    key={birthday.id}
-                                    className="rounded-lg border border-neutral-800 p-4"
-                                >
+                        {upcomingThisWeek.map((birthday) => (
+                            <UpcomingBirthdayCard
+                                key={birthday.id}
+                                birthday={birthday}
+                            />
+                        ))}
+                    </div>
+                )}
 
-                                    <div className="flex justify-between">
-
-                                        <div>
-
-                                            <h3 className="font-semibold">
-                                                {birthday.name}
-                                            </h3>
-
-                                            <p className="text-sm text-neutral-400">
-                                                Turning{" "}
-                                                {getAge(
-                                                    birthday.birthdate
-                                                ) + 1}
-                                            </p>
-
-                                        </div>
-
-                                        <div className="text-right">
-
-                                            <p className="font-semibold">
-                                                {daysUntilBirthday(
-                                                    birthday.birthdate
-                                                )} days
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            )
-                        )}
-
-                    </div>)}
             </section>
 
             <section>
@@ -198,49 +125,13 @@ export default function Dashboard() {
                         No upcoming birthdays in the next 30 days.
                     </div>
                 ) : (
-
                     <div className="grid gap-4">
-
-                        {upcomingThisMonth.map(
-                            (birthday) => (
-                                <div
-                                    key={birthday.id}
-                                    className="rounded-lg border border-neutral-800 p-4"
-                                >
-
-                                    <div className="flex justify-between">
-
-                                        <div>
-
-                                            <h3 className="font-semibold">
-                                                {birthday.name}
-                                            </h3>
-
-                                            <p className="text-sm text-neutral-400">
-                                                Turning{" "}
-                                                {getAge(
-                                                    birthday.birthdate
-                                                ) + 1}
-                                            </p>
-
-                                        </div>
-
-                                        <div className="text-right">
-
-                                            <p className="font-semibold">
-                                                {daysUntilBirthday(
-                                                    birthday.birthdate
-                                                )} days
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            )
-                        )}
-
+                        {upcomingThisMonth.map((birthday) => (
+                            <UpcomingBirthdayCard
+                                key={birthday.id}
+                                birthday={birthday}
+                            />
+                        ))}
                     </div>)}
             </section>
 

@@ -7,10 +7,11 @@ import {
     filterBirthdays,
 } from "@/utils/birthdayUtils"
 import { useBirthdays } from "@/hooks/useBirthday"
-import {
-    exportBirthdays,
-    importBirthdays,
-} from "@/services/importExportService"
+import LoadingButton
+    from "@/components/ui/LoadingButton"
+import FormMessage
+    from "@/components/ui/FormMessage"
+import { useImportExport } from "@/hooks/useImportExport"
 
 export default function Birthdays() {
 
@@ -46,44 +47,88 @@ export default function Birthdays() {
             }
         )
 
+    const {
+        handleImport,
+        handleExport,
+        importOperation,
+        exportOperation,
+    } = useImportExport(
+        loadBirthdays
+    )
+
     return (
-        <div className="space-y-6">
+        <div className="mx-auto max-w-6xl space-y-6">
+            <section
+                className="
+        rounded-xl
+        border
+        border-neutral-800
+        bg-neutral-900
+        p-6
+    "
+            >
 
-            <div className="flex gap-2">
-
-                <button
-                    onClick={async () => {
-
-                        const result =
-                            await exportBirthdays()
-
-                        alert(
-                            result?.message
-                        )
-                    }}
-                    className="rounded-md bg-green-600 px-4 py-2"
+                <h1
+                    className="
+            text-3xl
+            font-bold
+        "
                 >
-                    Export
-                </button>
+                    Birthday Management
+                </h1>
 
-                <button
-                    onClick={async () => {
-
-                        const result =
-                            await importBirthdays()
-
-                        alert(
-                            result?.message
-                        )
-
-                        await loadBirthdays()
-                    }}
-                    className="rounded-md bg-blue-600 px-4 py-2"
+                <p
+                    className="
+            mt-2
+            text-neutral-400
+        "
                 >
-                    Import
-                </button>
+                    Add, edit, import, export,
+                    and manage all saved birthdays.
+                </p>
+
+            </section>
+
+            <div className="flex flex-wrap gap-3">
+
+                <LoadingButton
+                    onClick={handleExport}
+                    loading={
+                        exportOperation.loading
+                    }
+
+                >
+                    Export Birthdays
+                </LoadingButton>
+
+                <LoadingButton
+                    onClick={handleImport}
+                    loading={
+                        importOperation.loading
+                    }
+                >
+                    Import Birthdays
+                </LoadingButton>
 
             </div>
+
+            <FormMessage
+                successMessage={
+                    exportOperation.successMessage
+                }
+                errorMessage={
+                    exportOperation.errorMessage
+                }
+            />
+
+            <FormMessage
+                successMessage={
+                    importOperation.successMessage
+                }
+                errorMessage={
+                    importOperation.errorMessage
+                }
+            />
 
             <AddBirthdayForm
                 onBirthdayAdded={
@@ -108,24 +153,72 @@ export default function Birthdays() {
                 setMaxAge={setMaxAge}
             />
 
-            <div className="grid gap-4">
+            <div
+                className="
+        flex
+        items-center
+        justify-between
+        rounded-lg
+        border
+        border-neutral-800
+        px-4
+        py-3
+    "
+            >
 
-                {filteredBirthdays.map(
-                    (birthday) => (
-                        <BirthdayCard
-                            key={birthday.id}
-                            birthday={birthday}
-                            onDelete={
-                                deleteBirthdayById
-                            }
-                            onEdit={
-                                setEditingBirthday
-                            }
-                        />
-                    )
-                )}
+                <span
+                    className="text-neutral-400"
+                >
+                    Showing
+                    {" "}
+                    {filteredBirthdays.length}
+                    {" "}
+                    of
+                    {" "}
+                    {birthdays.length}
+                    {" "}
+                    birthdays
+                </span>
 
             </div>
+
+            {filteredBirthdays.length === 0 ? (
+
+                <div
+                    className="
+            rounded-xl
+            border
+            border-neutral-800
+            p-6
+            text-center
+            text-neutral-400
+        "
+                >
+                    No birthdays match
+                    the selected filters.
+                </div>
+
+            ) : (
+
+                <div className="grid gap-4">
+
+                    {filteredBirthdays.map(
+                        (birthday) => (
+                            <BirthdayCard
+                                key={birthday.id}
+                                birthday={birthday}
+                                onDelete={
+                                    deleteBirthdayById
+                                }
+                                onEdit={
+                                    setEditingBirthday
+                                }
+                            />
+                        )
+                    )}
+
+                </div>
+            )}
 
         </div>
     )

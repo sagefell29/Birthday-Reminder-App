@@ -1,6 +1,5 @@
 import { useState } from "react"
 
-
 export function useAsyncOperation() {
 
     const [loading, setLoading] =
@@ -14,10 +13,9 @@ export function useAsyncOperation() {
         setErrorMessage] =
         useState("")
 
-    async function execute(
-        operation: () => Promise<void>,
-        successMessage?: string
-    ) {
+    async function execute<T>(
+        operation: () => Promise<T>
+    ): Promise<T | undefined> {
 
         setLoading(true)
 
@@ -26,13 +24,10 @@ export function useAsyncOperation() {
 
         try {
 
-            await operation()
+            const result =
+                await operation()
 
-            if (successMessage) {
-                setSuccessMessage(
-                    successMessage
-                )
-            }
+            return result
 
         } catch (error) {
 
@@ -43,6 +38,8 @@ export function useAsyncOperation() {
                     ? error.message
                     : "Something went wrong."
             )
+
+            return undefined
 
         } finally {
 
