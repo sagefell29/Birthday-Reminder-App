@@ -28,6 +28,18 @@ export default function Navbar() {
                     Birthdays
                 </NavLink>
 
+
+                <NavLink
+                    to="/settings"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "font-bold text-white"
+                            : "text-neutral-400"
+                    }
+                >
+                    Settings
+                </NavLink>
+
             </div>
 
         </nav>

@@ -94,6 +94,10 @@ export default function AddBirthdayForm({
       <LoadingButton
         type="submit"
         loading={loading}
+        className="
+          bg-green-600
+          text-white
+          hover:bg-green-700"
       >
         {editingBirthday
           ? "Update Birthday"

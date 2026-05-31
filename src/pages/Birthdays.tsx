@@ -7,11 +7,6 @@ import {
     filterBirthdays,
 } from "@/utils/birthdayUtils"
 import { useBirthdays } from "@/hooks/useBirthday"
-import LoadingButton
-    from "@/components/ui/LoadingButton"
-import FormMessage
-    from "@/components/ui/FormMessage"
-import { useImportExport } from "@/hooks/useImportExport"
 
 export default function Birthdays() {
 
@@ -47,15 +42,6 @@ export default function Birthdays() {
             }
         )
 
-    const {
-        handleImport,
-        handleExport,
-        importOperation,
-        exportOperation,
-    } = useImportExport(
-        loadBirthdays
-    )
-
     return (
         <div className="mx-auto max-w-6xl space-y-6">
             <section
@@ -88,47 +74,6 @@ export default function Birthdays() {
                 </p>
 
             </section>
-
-            <div className="flex flex-wrap gap-3">
-
-                <LoadingButton
-                    onClick={handleExport}
-                    loading={
-                        exportOperation.loading
-                    }
-
-                >
-                    Export Birthdays
-                </LoadingButton>
-
-                <LoadingButton
-                    onClick={handleImport}
-                    loading={
-                        importOperation.loading
-                    }
-                >
-                    Import Birthdays
-                </LoadingButton>
-
-            </div>
-
-            <FormMessage
-                successMessage={
-                    exportOperation.successMessage
-                }
-                errorMessage={
-                    exportOperation.errorMessage
-                }
-            />
-
-            <FormMessage
-                successMessage={
-                    importOperation.successMessage
-                }
-                errorMessage={
-                    importOperation.errorMessage
-                }
-            />
 
             <AddBirthdayForm
                 onBirthdayAdded={

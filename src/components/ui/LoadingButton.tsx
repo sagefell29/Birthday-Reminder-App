@@ -1,51 +1,34 @@
 interface Props {
-    loading?: boolean
     children: React.ReactNode
+    loading: boolean
+    type?: "button" | "submit" | "reset"
     onClick?: () => void
-    type?: "button" | "submit"
-    disabled?: boolean
+    className?: string
 }
 
 export default function LoadingButton({
-    loading = false,
     children,
-    onClick,
+    loading,
     type = "button",
-    disabled = false,
+    onClick,
+    className = "",
 }: Props) {
 
     return (
-        <div className="space-y-2">
-
-            <button
-                type={type}
-                onClick={onClick}
-                disabled={loading || disabled}
-                className="
-          w-full rounded-md
-          bg-white px-4 py-2
-          text-black
-          transition-all duration-200
-
-          hover:bg-neutral-300
-
-          disabled:cursor-not-allowed
-          disabled:opacity-60
-        "
-            >
-
-                {loading
-                    ? "Loading..."
-                    : children}
-
-            </button>
-
-            {loading && (
-                <div className="h-1 w-full overflow-hidden rounded bg-neutral-800">
-                    <div className="h-full animate-pulse bg-white" />
-                </div>
-            )}
-
-        </div>
+        <button
+            type={type}
+            onClick={onClick}
+            disabled={loading}
+            className={`
+                rounded-md px-4 py-2
+                transition-all duration-200
+                disabled:cursor-not-allowed
+                disabled:opacity-60
+                hover:brightness-90
+                ${className}
+            `}
+        >
+            {loading ? "Loading..." : children}
+        </button>
     )
 }

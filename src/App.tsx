@@ -11,6 +11,7 @@ import Dashboard from "@/pages/Dashboard"
 import Birthdays from "@/pages/Birthdays"
 
 import { initializeDatabase } from "@/database/setup"
+import Settings from "./pages/Settings"
 
 function App() {
 
@@ -47,6 +48,11 @@ function App() {
             <Route
               path="/birthdays"
               element={<Birthdays />}
+            />
+
+            <Route
+              path="/settings"
+              element={<Settings />}
             />
 
           </Routes>

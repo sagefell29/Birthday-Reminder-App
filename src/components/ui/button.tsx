@@ -1,7 +1,7 @@
 import * as React from "react"
 
 interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> { }
 
 export function Button({
   className,
@@ -9,7 +9,14 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`px-4 py-2 rounded-md bg-black text-white hover:opacity-90 ${className}`}
+      className={`
+                rounded-md px-4 py-2
+                transition-all duration-200
+                disabled:cursor-not-allowed
+                disabled:opacity-60
+                hover:brightness-90
+                ${className}
+            `}
       {...props}
     />
   )
