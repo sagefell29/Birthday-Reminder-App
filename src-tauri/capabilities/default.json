@@ -14,6 +14,16 @@
     "sql:allow-close",
     "notification:default",
     "dialog:default",
-    "fs:default"
+    "fs:default",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:allow-home-read",
+    "fs:allow-home-write",
+    "fs:allow-document-read",
+    "fs:allow-document-write",
+    "fs:allow-download-read",
+    "fs:allow-download-write",
+    "fs:allow-desktop-read",
+    "fs:allow-desktop-write"
   ]
 }

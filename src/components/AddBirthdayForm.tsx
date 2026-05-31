@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react"
-import {
-  addBirthday,
-  updateBirthday,
-} from "@/services/birthdayService"
 import type { Birthday } from "@/types/birthday"
 import LoadingButton from "@/components/ui/LoadingButton"
+import { useBirthdayForm }
+  from "@/hooks/useBirthdayForm"
+import FormMessage
+  from "@/components/ui/FormMessage"
 
 interface Props {
   onBirthdayAdded: () => Promise<void>
@@ -20,101 +19,23 @@ export default function AddBirthdayForm({
   clearEditing,
 }: Props) {
 
-  const [name, setName] = useState("")
-  const [birthdate, setBirthdate] = useState("")
-  const [notes, setNotes] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] =
-    useState("")
-  const [errorMessage, setErrorMessage] =
-    useState("")
-
-  useEffect(() => {
-    if (editingBirthday) {
-      setName(editingBirthday.name)
-      setBirthdate(editingBirthday.birthdate)
-      setNotes(editingBirthday.notes || "")
-    }
-  }, [editingBirthday])
-
-  async function handleSubmit(
-    e: React.FormEvent
-  ) {
-    e.preventDefault()
-
-    setSuccessMessage("")
-    setErrorMessage("")
-
-    try {
-
-      if (!name || !birthdate) {
-        setErrorMessage(
-          "Name and birthdate are required."
-        )
-        return
-      }
-
-      setLoading(true)
-
-      // Simulate small UX delay
-      await new Promise((resolve) =>
-        setTimeout(resolve, 500)
-      )
-
-      // EDIT MODE
-      if (editingBirthday) {
-
-        await updateBirthday({
-          id: editingBirthday.id,
-          name,
-          birthdate,
-          notes,
-        })
-
-        clearEditing()
-
-        setSuccessMessage(
-          "Birthday updated successfully."
-        )
-
-      } else {
-
-        // CREATE MODE
-        await addBirthday({
-          name,
-          birthdate,
-          notes,
-        })
-
-        setSuccessMessage(
-          "Birthday added successfully."
-        )
-      }
-
-      setName("")
-      setBirthdate("")
-      setNotes("")
-
-      await onBirthdayAdded()
-
-    } catch (error) {
-
-      console.error(error)
-
-      if (error instanceof Error) {
-        setErrorMessage(error.message)
-      } else {
-        setErrorMessage(
-          "Something went wrong."
-        )
-      }
-
-    } finally {
-
-      setLoading(false)
-
-    }
-  }
+  const {
+    name,
+    birthdate,
+    notes,
+    setName,
+    setBirthdate,
+    setNotes,
+    loading,
+    successMessage,
+    errorMessage,
+    handleSubmit,
+    cancelEdit
+  } = useBirthdayForm({
+    editingBirthday,
+    clearEditing,
+    onBirthdayAdded
+  })
 
   return (
     <form
@@ -133,13 +54,7 @@ export default function AddBirthdayForm({
         {editingBirthday && (
           <button
             type="button"
-            onClick={() => {
-              clearEditing()
-
-              setName("")
-              setBirthdate("")
-              setNotes("")
-            }}
+            onClick={cancelEdit}
             className="text-sm text-neutral-400 hover:text-white"
           >
             Cancel
@@ -185,17 +100,10 @@ export default function AddBirthdayForm({
           : "Save Birthday"}
       </LoadingButton>
 
-      {successMessage && (
-        <div className="rounded-md border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-400">
-          {successMessage}
-        </div>
-      )}
-
-      {errorMessage && (
-        <div className="rounded-md border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
-          {errorMessage}
-        </div>
-      )}
+      <FormMessage
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
 
     </form>
   )
