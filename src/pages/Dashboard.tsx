@@ -1,25 +1,34 @@
 import BirthdayCard from "@/components/BirthdayCard"
 import StatsCard from "@/components/StatsCard"
+import UpcomingEventCard from "@/components/UpcomingEventCard"
+
 import { useDashboard } from "@/hooks/useDashboard"
-import UpcomingBirthdayCard from "@/components/UpcomingBirthdayCard"
+
 import type { Birthday } from "@/types/birthday"
+import type { EventItem } from "@/types/eventItem"
 
 export default function Dashboard() {
 
     const {
+        // Birthdays
         todaysBirthdays,
-        upcomingThisWeek,
-        upcomingThisMonth,
         totalBirthdays,
         averageAge,
-        // oldestContact,
-        // youngestContact,
-        mostCommonMonth,
+        mostCommonBirthdayMonth,
+
+        // Anniversaries
+        totalAnniversaries,
+        mostCommonAnniversaryMonth,
+
+        // Combined Events
+        totalEvents,
+        mostCommonEventMonth,
+        upcomingEventsThisWeek,
+        upcomingEventsThisMonth,
     } = useDashboard()
 
     return (
         <div className="space-y-6">
-
 
             <section>
 
@@ -27,7 +36,12 @@ export default function Dashboard() {
                     Overview
                 </h2>
 
-                <div className="grid gap-4 md:grid-cols-4">
+                <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+
+                    <StatsCard
+                        title="Total Events"
+                        value={totalEvents}
+                    />
 
                     <StatsCard
                         title="Total Birthdays"
@@ -35,101 +49,137 @@ export default function Dashboard() {
                     />
 
                     <StatsCard
-                        title="Average Age"
-                        value={averageAge}
+                        title="Total Anniversaries"
+                        value={totalAnniversaries}
                     />
 
                     {/* <StatsCard
-                        title="Oldest Contact"
-                        value={
-                            oldestContact
-                                ? `${oldestContact.name} (${getAge(oldestContact.birthdate)})`
-                                : "-"
-                        }
-                    />
-
-                    <StatsCard
-                        title="Youngest Contact"
-                        value={
-                            youngestContact
-                                ? `${youngestContact.name} (${getAge(youngestContact.birthdate)})`
-                                : "-"
-                        }
+                        title="Average Age"
+                        value={averageAge}
                     /> */}
 
                     <StatsCard
-                        title="Most Common Month"
-                        value={mostCommonMonth}
+                        title="Most Events"
+                        value={mostCommonEventMonth}
+                    />
+
+                    <StatsCard
+                        title="Most Birthdays"
+                        value={mostCommonBirthdayMonth}
+                    />
+
+                    <StatsCard
+                        title="Most Anniversaries"
+                        value={mostCommonAnniversaryMonth}
                     />
 
                 </div>
 
             </section>
 
-
             <section>
+
                 <h2 className="mb-4 text-2xl font-semibold">
                     Today's Birthdays
                 </h2>
 
                 {todaysBirthdays.length === 0 ? (
-                    <p>No birthdays today.</p>
+
+                    <div className="rounded-lg border border-neutral-800 p-4">
+                        No birthdays today.
+                    </div>
+
                 ) : (
+
                     <div className="grid gap-4">
+
                         {todaysBirthdays.map(
                             (birthday: Birthday) => (
+
                                 <BirthdayCard
                                     key={birthday.id}
                                     birthday={birthday}
                                     onDelete={async () => { }}
                                     onEdit={() => { }}
                                 />
+
                             )
                         )}
-                    </div>
-                )}
-            </section>
 
-            <section>
-                <h2 className="mb-4 text-2xl font-semibold">
-                    Upcoming in next 7 days ({upcomingThisWeek.length})
-                </h2>
+                    </div>
 
-                {upcomingThisWeek.length === 0 ? (
-                    <div className='rounded-lg border border-neutral-800 p-4'>
-                        No upcoming birthdays in the next 7 days.
-                    </div>
-                ) : (
-                    <div className="grid gap-4">
-                        {upcomingThisWeek.map((birthday: Birthday) => (
-                            <UpcomingBirthdayCard
-                                key={birthday.id}
-                                birthday={birthday}
-                            />
-                        ))}
-                    </div>
                 )}
 
             </section>
 
             <section>
+
                 <h2 className="mb-4 text-2xl font-semibold">
-                    Upcoming in next 30 days ({upcomingThisMonth.length})
+                    Upcoming Events in the next 7 days:
+                    {" "}
+                    {upcomingEventsThisWeek.length}
                 </h2>
 
-                {upcomingThisMonth.length === 0 ? (
-                    <div className='rounded-lg border border-neutral-800 p-4'>
-                        No upcoming birthdays in the next 30 days.
+                {upcomingEventsThisWeek.length === 0 ? (
+
+                    <div className="rounded-lg border border-neutral-800 p-4">
+                        No upcoming events in the next 7 days.
                     </div>
+
                 ) : (
+
                     <div className="grid gap-4">
-                        {upcomingThisMonth.map((birthday: Birthday) => (
-                            <UpcomingBirthdayCard
-                                key={birthday.id}
-                                birthday={birthday}
-                            />
-                        ))}
-                    </div>)}
+
+                        {upcomingEventsThisWeek.map(
+                            (event: EventItem) => (
+
+                                <UpcomingEventCard
+                                    key={`${event.type}-${event.id}`}
+                                    event={event}
+                                />
+
+                            )
+                        )}
+
+                    </div>
+
+                )}
+
+            </section>
+
+            <section>
+
+                <h2 className="mb-4 text-2xl font-semibold">
+                    Upcoming Events in the next 30 days:
+                    {" "}
+                    {upcomingEventsThisMonth.length}
+                </h2>
+
+                {upcomingEventsThisMonth.length === 0 ? (
+
+                    <div className="rounded-lg border border-neutral-800 p-4">
+                        No upcoming events in the next 30 days.
+                    </div>
+
+                ) : (
+
+                    <div className="grid gap-4">
+
+                        {upcomingEventsThisMonth.map(
+                            (event: EventItem) => (
+
+                                <UpcomingEventCard
+                                    key={`${event.type}-${event.id}`}
+                                    event={event}
+                                />
+
+                            )
+                        )}
+
+                    </div>
+
+                )}
+
             </section>
 
         </div>

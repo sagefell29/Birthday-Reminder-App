@@ -1,13 +1,19 @@
 import { useBirthdays } from "@/hooks/useBirthday"
 
 import {
-  getBirthdaySummary,
+  getBirthdayStats,
   getOldestContact,
-  getYoungestContact,
-  getMostCommonMonth,
+  getYoungestContact
 } from "@/utils/birthdayUtils"
 import { useAnniversaries } from "./useAnniversaries"
-import { getAnniversarySummary } from "@/utils/anniversaryUtils"
+import { getAnniversaryStats } from "@/utils/anniversaryUtils"
+import {
+  combineEvents,
+  getMostCommonEventMonth,
+  getTodaysEvents,
+  getTotalEvents,
+  getUpcomingEvents
+} from "@/utils/eventUtils"
 
 export function useDashboard() {
   const {
@@ -17,13 +23,30 @@ export function useDashboard() {
     loadBirthdays,
   } = useBirthdays()
 
-  const {anniversaries} = useAnniversaries()
+  const { anniversaries } = useAnniversaries()
 
-  const anniversaryDashboardData =
-    getAnniversarySummary(anniversaries)
+  const events = combineEvents(birthdays, anniversaries)
 
-  const birthdaydashboardData =
-    getBirthdaySummary(birthdays)
+  const totalEvents =
+    getTotalEvents(events)
+
+  const mostCommonEventMonth =
+    getMostCommonEventMonth(events)
+
+  const todaysEvents =
+    getTodaysEvents(events)
+
+  const upcomingEventsThisWeek =
+    getUpcomingEvents(events, 7)
+
+  const upcomingEventsThisMonth =
+    getUpcomingEvents(events, 30)
+
+  const anniversaryStats =
+    getAnniversaryStats(anniversaries)
+
+  const birthdayStats =
+    getBirthdayStats(birthdays)
 
   const oldestContact =
     getOldestContact(birthdays)
@@ -31,22 +54,32 @@ export function useDashboard() {
   const youngestContact =
     getYoungestContact(birthdays)
 
-  const mostCommonMonth =
-    getMostCommonMonth(birthdays)
-
   return {
-    birthdays,
 
     loading,
     error,
 
     loadBirthdays,
 
+    birthdays,
+    anniversaries,
+
+    events,
+
+    totalEvents,
+
+    todaysEvents,
+
+    upcomingEventsThisWeek,
+
+    upcomingEventsThisMonth,
+
     oldestContact,
     youngestContact,
-    mostCommonMonth,
+    mostCommonEventMonth,
 
-    ...birthdaydashboardData,
-    ...anniversaryDashboardData,
+    ...birthdayStats,
+
+    ...anniversaryStats,
   }
 }

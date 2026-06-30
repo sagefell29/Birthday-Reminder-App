@@ -82,7 +82,7 @@ export function getBirthdaysThisMonth(
         )
 }
 
-export function getBirthdaySummary(
+export function getBirthdayStats(
     birthdays: Birthday[]
 ) {
 
@@ -99,6 +99,9 @@ export function getBirthdaySummary(
     const birthdaysThisMonth = upcomingThisMonth.length
 
     const birthdaysThisWeek = upcomingThisWeek.length
+
+    const mostCommonBirthdayMonth = getMostCommonBirthdayMonth(birthdays)
+
 
     const averageAge =
         birthdays.length === 0
@@ -121,7 +124,32 @@ export function getBirthdaySummary(
         birthdaysThisMonth,
         birthdaysThisWeek,
         averageAge,
+        mostCommonBirthdayMonth
     }
+}
+
+export function getMostCommonBirthdayMonth(
+    birthdays: Birthday[]
+) {
+
+    if (birthdays.length === 0) {
+        return "-"
+    }
+
+    const counts = new Array(12).fill(0)
+
+    birthdays.forEach((birthday) => {
+        counts[
+            getEventMonth(birthday.date)
+        ]++
+    })
+
+    const max =
+        Math.max(...counts)
+
+    return MONTHS[
+        counts.indexOf(max)
+    ]
 }
 
 export function getOldestContact(

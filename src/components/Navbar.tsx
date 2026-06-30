@@ -11,7 +11,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                         isActive
                             ? "font-bold text-white"
-                            : "text-neutral-400"
+                            : "text-neutral-400 hover:text-white"
                     }
                 >
                     Dashboard
@@ -22,7 +22,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                         isActive
                             ? "font-bold text-white"
-                            : "text-neutral-400"
+                            : "text-neutral-400 hover:text-white"
                     }
                 >
                     Birthdays
@@ -34,7 +34,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                         isActive
                             ? "font-bold text-white"
-                            : "text-neutral-400"
+                            : "text-neutral-400 hover:text-white"
                     }
                 >
                     Anniversaries
@@ -45,7 +45,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                         isActive
                             ? "font-bold text-white"
-                            : "text-neutral-400"
+                            : "text-neutral-400 hover:text-white"
                     }
                 >
                     Settings

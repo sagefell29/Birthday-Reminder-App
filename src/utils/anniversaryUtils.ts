@@ -46,91 +46,26 @@ export function getUpcomingAnniversaries(
         )
 }
 
-export function getAnniversarySummary(
+export function getAnniversaryStats(
     anniversaries: Anniversary[]
 ) {
 
-    const todaysAnniversaries =
-        anniversaries.filter((anniversary) =>
-            isEventToday(
-                anniversary.date
-            )
-        )
+    const todaysAnniversaries = getTodaysAnniversaries(anniversaries)
 
-    const upcomingAnniversaries =
-        anniversaries
-            .filter(
-                (anniversary) =>
-                    !isEventToday(
-                        anniversary.date
-                    )
-            )
-            .sort(
-                (a, b) =>
-                    daysUntilEvent(
-                        a.date
-                    ) -
-                    daysUntilEvent(
-                        b.date
-                    )
-            )
-            .slice(0, 5)
+    const upcomingAnniversaries = getUpcomingAnniversaries(
+        anniversaries,360).slice(0, 5)
 
-    const upcomingThisWeek =
-        anniversaries
-            .filter((anniversary) =>
-                isEventWithinRange(
-                    anniversary.date,
-                    1,
-                    7
-                )
-            )
-            .sort(
-                (a, b) =>
-                    daysUntilEvent(
-                        a.date
-                    ) -
-                daysUntilEvent(
-                        b.date
-                    )
-            )
+    const upcomingThisWeek = getUpcomingAnniversaries(anniversaries, 7)
 
-    const upcomingThisMonth =
-        anniversaries
-            .filter((anniversary) =>
-                isEventWithinRange(
-                    anniversary.date,
-                    8,
-                    30
-                )
-            )
-            .sort(
-                (a, b) =>
-                    daysUntilEvent(
-                        a.date
-                    ) -
-                    daysUntilEvent(
-                        b.date
-                    )
-            )
+    const upcomingThisMonth = getUpcomingAnniversaries(anniversaries, 31)
 
-    const totalAnniversaries =
-        anniversaries.length
+    const totalAnniversaries = anniversaries.length
 
-    const anniversariesThisMonth =
-        anniversaries.filter((anniversary) =>
-            isEventThisMonth(
-                anniversary.date
-            )
-        ).length
+    const anniversariesThisMonth = upcomingThisMonth.length
 
-    const anniversariesThisWeek =
-        anniversaries.filter((anniversary) =>
-            isEventWithinDays(
-                anniversary.date,
-                7
-            )
-        ).length
+    const anniversariesThisWeek = upcomingThisWeek.length
+
+    const mostCommonAnniversaryMonth = getMostCommonAnniversaryMonth(anniversaries)
 
     const averageAge =
         anniversaries.length === 0
@@ -155,7 +90,32 @@ export function getAnniversarySummary(
         anniversariesThisMonth,
         anniversariesThisWeek,
         averageAge,
+        mostCommonAnniversaryMonth
     }
+}
+
+export function getMostCommonAnniversaryMonth(
+    anniversaries: Anniversary[]
+) {
+
+    if (anniversaries.length === 0) {
+        return "-"
+    }
+
+    const counts = new Array(12).fill(0)
+
+    anniversaries.forEach((event) => {
+        counts[
+            getEventMonth(event.date)
+        ]++
+    })
+
+    const max =
+        Math.max(...counts)
+
+    return MONTHS[
+        counts.indexOf(max)
+    ]
 }
 
 interface FilterOptions {

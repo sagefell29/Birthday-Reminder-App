@@ -10,7 +10,7 @@ interface Props {
 export default function LoadingButton({
     children,
     loading,
-    isValid,
+    isValid = true,
     type = "button",
     onClick,
     className = "",
