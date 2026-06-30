@@ -139,6 +139,10 @@ export function useAnniversaryForm({
         setNotes("")
     }
 
+    const isValid =
+    title.trim().length>0 &&
+    date.length>0
+
     return {
 
         title,
@@ -158,6 +162,7 @@ export function useAnniversaryForm({
         setErrorMessage,
 
         handleSubmit,
-        cancelEdit
+        cancelEdit,
+        isValid
     }
 }

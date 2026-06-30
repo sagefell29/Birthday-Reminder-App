@@ -1,3 +1,5 @@
+import LoadingButton from "./ui/LoadingButton"
+
 interface Props {
   search: string
   setSearch: (value: string) => void
@@ -10,6 +12,8 @@ interface Props {
 
   maxAge: string
   setMaxAge: (value: string) => void
+
+  clearFilters: () => void
 }
 
 const months = [
@@ -36,8 +40,16 @@ export default function BirthdayFilters({
   minAge,
   setMinAge,
   maxAge,
-  setMaxAge
+  setMaxAge,
+  clearFilters,
 }: Props) {
+
+  const hasActiveFilters =
+    search !== "" ||
+    month !== "All" ||
+    minAge !== "" ||
+    maxAge !== ""
+
   return (
     <div className="rounded-lg border border-neutral-800 p-4">
       <div className="grid gap-4 md:grid-cols-2">
@@ -88,6 +100,24 @@ export default function BirthdayFilters({
           }
           className="rounded-md bg-neutral-900 p-2"
         />
+
+        {hasActiveFilters && <div>
+        <LoadingButton
+                type="button"
+                loading={false}
+                isValid={true}
+                onClick={clearFilters}
+                className="
+                bg-neutral-700
+                text-white
+                hover:bg-neutral-600
+                align-center
+                "
+            >
+                Clear Filters
+            </LoadingButton>
+            </div>
+            }
 
       </div>
     </div>

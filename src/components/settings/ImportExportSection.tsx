@@ -26,10 +26,9 @@ export default function ImportExportSection({
             <div className="flex gap-3">
 
                 <LoadingButton
-                    loading={
-                        exportOperation.loading
-                    }
+                    loading={exportOperation.loading}
                     onClick={handleExport}
+                    isValid={true}
                     className="
                     bg-green-600
                     text-white
@@ -39,10 +38,9 @@ export default function ImportExportSection({
                 </LoadingButton>
 
                 <LoadingButton
-                    loading={
-                        importOperation.loading
-                    }
+                    loading={importOperation.loading}
                     onClick={handleImport}
+                    isValid={true}
                     className="
                         bg-blue-600
                         text-white

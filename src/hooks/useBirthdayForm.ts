@@ -115,6 +115,10 @@ export function useBirthdayForm({
         )
     }
 
+    const isValid =
+        name.trim().length > 0 &&
+        birthdate.length > 0
+
     return {
 
         name,
@@ -134,5 +138,6 @@ export function useBirthdayForm({
 
         handleSubmit,
         cancelEdit,
+        isValid
     }
 }

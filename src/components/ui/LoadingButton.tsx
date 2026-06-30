@@ -4,11 +4,13 @@ interface Props {
     type?: "button" | "submit" | "reset"
     onClick?: () => void
     className?: string
+    isValid?: boolean
 }
 
 export default function LoadingButton({
     children,
     loading,
+    isValid,
     type = "button",
     onClick,
     className = "",
@@ -18,7 +20,7 @@ export default function LoadingButton({
         <button
             type={type}
             onClick={onClick}
-            disabled={loading}
+            disabled={loading || !isValid}
             className={`
                 rounded-md px-4 py-2
                 transition-all duration-200

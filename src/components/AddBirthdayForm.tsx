@@ -32,7 +32,8 @@ export default function AddBirthdayForm({
     setSuccessMessage,
     setErrorMessage,
     handleSubmit,
-    cancelEdit
+    cancelEdit,
+    isValid
   } = useBirthdayForm({
     editingBirthday,
     clearEditing,
@@ -96,10 +97,14 @@ export default function AddBirthdayForm({
       <LoadingButton
         type="submit"
         loading={loading}
+        isValid={isValid}
         className="
           bg-green-600
           text-white
-          hover:bg-green-700"
+          hover:bg-green-700
+          disabled:cursor-not-allowed
+          disabled:opacity-50"
+          
       >
         {editingBirthday
           ? "Update Birthday"

@@ -1,33 +1,25 @@
+import LoadingButton from "./ui/LoadingButton"
+import {MONTHS} from "../utils/dateUtils"
+
 interface Props {
     search: string
     setSearch: (value: string) => void
 
     month: string
     setMonth: (value: string) => void
-}
 
-const months = [
-    "All",
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-]
+    clearFilters: () => void
+}
 
 export default function AnniversaryFilters({
     search,
     setSearch,
     month,
     setMonth,
+    clearFilters,
 }: Props) {
+
+    const hasActiveFilters = search !== "" || month !== "All" 
 
     return (
 
@@ -58,7 +50,7 @@ export default function AnniversaryFilters({
                 }
                 className="w-full rounded-md bg-neutral-900 p-2"
             >
-                {months.map((month) => (
+                {MONTHS.map((month) => (
 
                     <option
                         key={month}
@@ -69,6 +61,23 @@ export default function AnniversaryFilters({
 
                 ))}
             </select>
+            
+            {hasActiveFilters &&
+                <LoadingButton
+                type="button"
+                loading={false}
+                isValid={true}
+                onClick={clearFilters}
+                className="
+                    bg-neutral-700
+                    text-white
+                    hover:bg-neutral-600
+                    "
+            >
+                Clear Filters
+            
+            </LoadingButton> 
+            }
 
         </div>
 

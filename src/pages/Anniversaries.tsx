@@ -7,6 +7,9 @@ import { useAnniversaries }
 
 import AnniversaryFilters
     from "@/components/AnniversaryFilters"
+import ConfirmDialog from "@/components/ui/ConfirmModal"
+import { useAsyncOperation } from "@/hooks/useAsyncOperation"
+import { useConfirmation } from "@/hooks/useConfirmation"
 
 export default function Anniversaries() {
 
@@ -22,8 +25,15 @@ export default function Anniversaries() {
         editingAnniversary,
         clearEditing,
         // handleEdit,
-        setEditingAnniversary
+        setEditingAnniversary,
+        clearFilters,
     } = useAnniversaries()
+
+    const confirmation =
+        useConfirmation()
+
+    const deleteOperation =
+        useAsyncOperation()
 
     return (
         <div className="space-y-6">
@@ -76,6 +86,7 @@ export default function Anniversaries() {
                 setSearch={setSearch}
                 month={month}
                 setMonth={setMonth}
+                clearFilters={clearFilters}
             />
 
             <div className="grid gap-4">
@@ -96,7 +107,7 @@ export default function Anniversaries() {
                             <AnniversaryCard
                                 key={anniversary.id}
                                 anniversary={anniversary}
-                                onDelete={deleteAnniversaryById}
+                                onDelete={async (id) => confirmation.open(id)}
                                 onEdit={setEditingAnniversary}
                             />
                         ))}
@@ -106,6 +117,28 @@ export default function Anniversaries() {
                 )}
 
             </div>
+
+            <ConfirmDialog
+                open={confirmation.isOpen}
+                title="Delete Anniversary"
+                message="Are you sure you want to permanently delete this anniversary?"
+                loading={deleteOperation.loading}
+                onCancel={confirmation.close}
+                onConfirm={async () => {
+
+                    if (confirmation.selectedId == null) {
+                        return
+                    }
+
+                    await deleteOperation.execute(() =>
+                        deleteAnniversaryById(
+                            confirmation.selectedId!
+                        )
+                    )
+
+                    confirmation.close()
+                }}
+            />
 
         </div>
     )

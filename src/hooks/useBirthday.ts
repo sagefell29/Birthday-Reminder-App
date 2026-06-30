@@ -32,6 +32,13 @@ export function useBirthdays() {
     const [birthdays, setBirthdays] =
         useState<Birthday[]>([])
 
+    function clearFilters() {
+        setSearch("")
+        setMonth("All")
+        setMinAge("")
+        setMaxAge("")
+    }
+
     async function loadBirthdays() {
         try {
             setLoading(true)
@@ -78,6 +85,12 @@ export function useBirthdays() {
         loadBirthdays()
     }, [])
 
+    const hasActiveFilters =
+    search !== "" ||
+    month !== "All" ||
+    minAge !== "" ||
+    maxAge !== ""
+
     return {
         birthdays,
         loading,
@@ -94,5 +107,7 @@ export function useBirthdays() {
         setMinAge,
         maxAge,
         setMaxAge,
+        clearFilters,
+        hasActiveFilters,
     }
 }

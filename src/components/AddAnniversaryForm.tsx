@@ -31,7 +31,8 @@ export default function AddAnniversaryForm({
         errorMessage,
         setErrorMessage,
         handleSubmit,
-        cancelEdit
+        cancelEdit,
+        isValid
     } = useAnniversaryForm({
         editingAnniversary,
         clearEditing,
@@ -103,6 +104,7 @@ export default function AddAnniversaryForm({
             <LoadingButton
                 type="submit"
                 loading={loading}
+                isValid={isValid}
                 className="
                 bg-green-600
                 text-white

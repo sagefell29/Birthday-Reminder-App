@@ -5,6 +5,9 @@ import {
     filterBirthdays,
 } from "@/utils/birthdayUtils"
 import { useBirthdays } from "@/hooks/useBirthday"
+import { useAsyncOperation } from "@/hooks/useAsyncOperation"
+import { useConfirmation } from "@/hooks/useConfirmation"
+import ConfirmDialog from "@/components/ui/ConfirmModal"
 
 export default function Birthdays() {
 
@@ -22,7 +25,14 @@ export default function Birthdays() {
         setMinAge,
         maxAge,
         setMaxAge,
+        clearFilters,
     } = useBirthdays()
+
+    const confirmation =
+        useConfirmation()
+
+    const deleteOperation =
+        useAsyncOperation()
 
     const filteredBirthdays =
         filterBirthdays(
@@ -89,19 +99,20 @@ export default function Birthdays() {
                 setMinAge={setMinAge}
                 maxAge={maxAge}
                 setMaxAge={setMaxAge}
+                clearFilters={clearFilters}
             />
 
             <div
                 className="
-        flex
-        items-center
-        justify-between
-        rounded-lg
-        border
-        border-neutral-800
-        px-4
-        py-3
-    "
+                flex
+                items-center
+                justify-between
+                rounded-lg
+                border
+                border-neutral-800
+                px-4
+                py-3
+                "
             >
 
                 <span
@@ -145,9 +156,7 @@ export default function Birthdays() {
                             <BirthdayCard
                                 key={birthday.id}
                                 birthday={birthday}
-                                onDelete={
-                                    deleteBirthdayById
-                                }
+                                onDelete={async (id) => confirmation.open(id)}
                                 onEdit={
                                     setEditingBirthday
                                 }
@@ -157,6 +166,28 @@ export default function Birthdays() {
 
                 </div>
             )}
+
+            <ConfirmDialog
+                open={confirmation.isOpen}
+                title="Delete Birthday"
+                message="Are you sure you want to permanently delete this birthday?"
+                loading={deleteOperation.loading}
+                onCancel={confirmation.close}
+                onConfirm={async () => {
+
+                    if (confirmation.selectedId == null) {
+                        return
+                    }
+
+                    await deleteOperation.execute(() =>
+                        deleteBirthdayById(
+                            confirmation.selectedId!
+                        )
+                    )
+
+                    confirmation.close()
+                }}
+            />
 
         </div>
     )

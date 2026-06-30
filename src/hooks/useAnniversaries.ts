@@ -50,10 +50,10 @@ export function useAnniversaries() {
         setEditingAnniversary(null)
     }
 
-    console.log({
-        anniversaries,
-        filteredAnniversaries,
-    })
+    const clearFilters = () => {
+        setSearch("")
+        setMonth("All")
+    }
 
     return {
         anniversaries,
@@ -67,5 +67,6 @@ export function useAnniversaries() {
         editingAnniversary,
         setEditingAnniversary,
         clearEditing,
+        clearFilters,
     }
 }

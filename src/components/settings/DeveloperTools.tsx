@@ -43,10 +43,9 @@ export default function DeveloperTools() {
         <div className="space-y-4">
 
             <LoadingButton
-                loading={
-                    resetOperation.loading
-                }
+                loading={resetOperation.loading}
                 onClick={handleReset}
+                isValid={true}
                 className="
                     bg-red-600
                     text-white
