@@ -1,13 +1,13 @@
 import {
-    exportBirthdays,
-    importBirthdays,
+    exportEvents,
+    importEvents,
 } from "@/services/importExportService"
 
 import { useAsyncOperation }
     from "@/hooks/useAsyncOperation"
 
 export function useImportExport(
-    reloadBirthdays: () => Promise<void>
+    reloadData: () => Promise<void>
 ) {
 
     const exportOperation =
@@ -20,7 +20,7 @@ export function useImportExport(
 
         const result =
             await exportOperation.execute(
-                exportBirthdays
+                exportEvents
             )
 
         if (!result?.success) {
@@ -36,7 +36,7 @@ export function useImportExport(
 
         const result =
             await importOperation.execute(
-                importBirthdays
+                importEvents
             )
 
         if (!result?.success) {
@@ -47,7 +47,7 @@ export function useImportExport(
             result.message
         )
 
-        await reloadBirthdays()
+        await reloadData()
     }
 
     return {

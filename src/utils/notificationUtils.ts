@@ -1,32 +1,46 @@
-import type { Birthday }
-    from "@/types/birthday"
+import type { Anniversary } from "@/types/anniversary"
 
-import {
-    isBirthdayToday,
-} from "@/utils/dateUtils"
+import type { Birthday } from "@/types/birthday"
+
+import {getTodaysBirthdays} from "@/utils/birthdayUtils"
+
+import {getTodaysAnniversaries} from "@/utils/anniversaryUtils"
 
 export function buildTodayMessage(
-    birthdays: Birthday[]
+    birthdays: Birthday[],
+    anniversaries: Anniversary[]
 ) {
-    const todays =
-        birthdays.filter(
-            (birthday) =>
-                isBirthdayToday(
-                    birthday.birthdate
-                )
+    const birthdaysToday =
+        getTodaysBirthdays(birthdays)
+
+    const anniversariesToday =
+        getTodaysAnniversaries(anniversaries)
+
+    const lines: string[] = []
+
+    if (birthdaysToday.length > 0) {
+
+        lines.push("🎂 Birthdays")
+
+        birthdaysToday.forEach((birthday) =>
+            lines.push(`• ${birthday.title}`)
         )
-
-    if (todays.length === 0) {
-        return null
     }
 
-    if (todays.length === 1) {
-        return `${todays[0].name} has a birthday today 🎉`
+    if (anniversariesToday.length > 0) {
+
+        if (lines.length > 0) {
+            lines.push("")
+        }
+
+        lines.push("💍 Anniversaries")
+
+        anniversariesToday.forEach((anniversary) =>
+            lines.push(`• ${anniversary.title}`)
+        )
     }
 
-    return `${todays.length} birthdays today: ${todays
-        .map((b) => b.name)
-        .join(", ")} 🎉`
+    return lines.join("\n")
 }
 
 export function getTodayKey() {

@@ -17,11 +17,32 @@ export default function Settings() {
     return (
         <div className="space-y-6">
 
+                        <section
+                className="
+                rounded-xl
+                border
+                border-neutral-800
+                bg-neutral-900
+                p-6
+                "
+            >
+
+                <h1
+                    className="
+                    text-3xl
+                    font-bold
+                    "
+                >
+                    Settings
+                </h1>
+            
+            </section>
+
             <SettingsCard
                 title="Import / Export"
             >
                 <ImportExportSection
-                    reloadBirthdays={
+                    reloadData={
                         loadBirthdays
                     }
                 />

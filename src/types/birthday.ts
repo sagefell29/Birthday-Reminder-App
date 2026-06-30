@@ -1,7 +1,7 @@
 export interface Birthday {
   id?: number
-  name: string
-  birthdate: string
+  title: string
+  date: string
   notes?: string
   created_at?: string
 }

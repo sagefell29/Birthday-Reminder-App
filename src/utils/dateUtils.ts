@@ -1,16 +1,31 @@
-export function isBirthdayToday(
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
+
+export function isEventToday(
   dateString: string
 ) {
   const today = new Date()
-  const birthday = new Date(dateString)
+  const event = new Date(dateString)
 
   return (
-    today.getDate() === birthday.getDate() &&
-    today.getMonth() === birthday.getMonth()
+    today.getDate() === event.getDate() &&
+    today.getMonth() === event.getMonth()
   )
 }
 
-export function formatBirthdayDate(
+export function formatEventDate(
   dateString: string
 ) {
   const date = new Date(dateString)
@@ -26,10 +41,10 @@ export function formatBirthdayDate(
 }
 
 export function getAge(
-  birthdate: string
+  datestring: string
 ) {
   const today = new Date()
-  const birth = new Date(birthdate)
+  const birth = new Date(datestring)
 
   let age =
     today.getFullYear() -
@@ -52,33 +67,33 @@ export function getAge(
   return age
 }
 
-export function getBirthMonth(
-  birthdate: string
+export function getEventMonth(
+  dateString: string
 ) {
-  return new Date(birthdate).getMonth()
+  return new Date(dateString).getMonth()
 }
 
-export function daysUntilBirthday(
-  birthdate: string
+export function daysUntilEvent(
+  dateString: string
 ) {
   const today = new Date()
 
-  const birthday = new Date(birthdate)
+  const event = new Date(dateString)
 
-  const nextBirthday = new Date(
+  const nextEvent = new Date(
     today.getFullYear(),
-    birthday.getMonth(),
-    birthday.getDate()
+    event.getMonth(),
+    event.getDate()
   )
 
-  if (nextBirthday < today) {
-    nextBirthday.setFullYear(
+  if (nextEvent < today) {
+    nextEvent.setFullYear(
       today.getFullYear() + 1
     )
   }
 
   const diff =
-    nextBirthday.getTime() -
+    nextEvent.getTime() -
     today.getTime()
 
   return Math.ceil(
@@ -86,37 +101,69 @@ export function daysUntilBirthday(
   )
 }
 
-export function isBirthdayThisMonth(
-  birthdate: string
+export function isEventThisMonth(
+  dateString: string
 ) {
   const today = new Date()
 
   return (
-    new Date(birthdate).getMonth() ===
+    new Date(dateString).getMonth() ===
     today.getMonth()
   )
 }
 
-export function isBirthdayWithinDays(
-  birthdate: string,
+export function isEventWithinDays(
+  dateString: string,
   days: number
 ) {
   return (
-    daysUntilBirthday(birthdate) <= days
+    daysUntilEvent(dateString) <= days
   )
 }
 
-export function isBirthdayWithinRange(
-  birthdate: string,
+export function isEventWithinRange(
+  dateString: string,
   minDays: number,
   maxDays: number
 ) {
-  const days = daysUntilBirthday(
-    birthdate
+  const days = daysUntilEvent(
+    dateString
   )
 
   return (
     days >= minDays &&
     days <= maxDays
+  )
+}
+
+export function daysUntilDate(
+  dateString: string
+) {
+  const today =
+    new Date()
+
+  const target =
+    new Date(dateString)
+
+  target.setFullYear(
+    today.getFullYear()
+  )
+
+  if (target < today) {
+    target.setFullYear(
+      today.getFullYear() + 1
+    )
+  }
+
+  const diff =
+    target.getTime() -
+    today.getTime()
+
+  return Math.ceil(
+    diff /
+    (1000 *
+      60 *
+      60 *
+      24)
   )
 }

@@ -30,6 +30,17 @@ export default function Navbar() {
 
 
                 <NavLink
+                    to="/anniversaries"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "font-bold text-white"
+                            : "text-neutral-400"
+                    }
+                >
+                    Anniversaries
+                </NavLink>
+
+                <NavLink
                     to="/settings"
                     className={({ isActive }) =>
                         isActive
@@ -39,6 +50,7 @@ export default function Navbar() {
                 >
                     Settings
                 </NavLink>
+
 
             </div>
 

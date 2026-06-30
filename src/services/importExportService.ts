@@ -10,17 +10,35 @@ import {
     addBirthday,
 } from "@/services/birthdayService"
 
-import type { Birthday } from "@/types/birthday"
+import { getAnniversaries, addAnniversary } from "./anniversaryService"
+import type { BackupFile } from "@/types/backup"
+import { isBackupFile } from "@/utils/backupUtils"
 
-export async function exportBirthdays() {
+export async function exportEvents() {
     try {
         const birthdays =
             await getBirthdays()
 
+        const anniversaries =
+            await getAnniversaries()
+
+        const backup: BackupFile = {
+            version: 1,
+            exportedAt:
+                new Date().toISOString(),
+            birthdays,
+            anniversaries,
+        }
+
+        const today =
+            new Date()
+                .toISOString()
+                .split("T")[0]
+
         const filePath =
             await save({
                 defaultPath:
-                    "birthdays-backup.json",
+                    `event-backup-${today}.json`,
                 filters: [
                     {
                         name: "JSON",
@@ -39,7 +57,7 @@ export async function exportBirthdays() {
         await writeTextFile(
             filePath,
             JSON.stringify(
-                birthdays,
+                backup,
                 null,
                 2
             )
@@ -48,7 +66,7 @@ export async function exportBirthdays() {
         return {
             success: true,
             message:
-                "Birthdays exported successfully",
+                "Events exported successfully",
         }
 
     } catch (error) {
@@ -65,7 +83,7 @@ export async function exportBirthdays() {
     }
 }
 
-export async function importBirthdays() {
+export async function importEvents() {
     try {
 
         const filePath =
@@ -92,56 +110,132 @@ export async function importBirthdays() {
                 filePath as string
             )
 
-        const importedBirthdays =
-            JSON.parse(
-                fileContent
-            ) as Birthday[]
+        const parsed: unknown =
+            JSON.parse(fileContent)
+
+        let backup: BackupFile
+
+        if (Array.isArray(parsed)) {
+
+            backup = {
+                version: 0,
+                exportedAt: "",
+                birthdays: parsed,
+                anniversaries: [],
+            }
+
+        } else if (isBackupFile(parsed)) {backup = parsed} 
+        
+        else {
+            throw new Error("Invalid backup file.")
+        }
+
+        //Birthdays Section
+        if (!Array.isArray(backup.birthdays)) {
+            return {
+                success: false,
+                message: "Invalid backup file format",
+            }
+        }
+
+        const birthdays = backup.birthdays ?? []
 
         const existingBirthdays =
             await getBirthdays()
 
-        let importedCount = 0
-        let skippedCount = 0
+        let importedBirthdaysCount = 0
+        let skippedBirthdaysCount = 0
 
-        for (const birthday of importedBirthdays) {
+        for (const birthday of birthdays) {
 
             const duplicate =
                 existingBirthdays.some(
                     (existingBirthday) =>
-                        existingBirthday.name
+                        existingBirthday.title
                             .trim()
                             .toLowerCase() ===
-                        birthday.name
+                        birthday.title
                             .trim()
                             .toLowerCase() &&
-                        existingBirthday.birthdate ===
-                        birthday.birthdate
+                        existingBirthday.date ===
+                        birthday.date
                 )
 
             if (duplicate) {
-                skippedCount++
+                skippedBirthdaysCount++
                 continue
             }
 
             await addBirthday({
-                name: birthday.name,
-                birthdate:
-                    birthday.birthdate,
+                title: birthday.title,
+                date:
+                    birthday.date,
                 notes:
                     birthday.notes ?? "",
             })
 
-            importedCount++
+            importedBirthdaysCount++
 
             existingBirthdays.push({
                 ...birthday,
             })
         }
 
+        //Anniversaries Section
+        if (!Array.isArray(backup.anniversaries)) {
+            return {
+                success: false,
+                message: "Invalid backup file format",
+            }
+        }
+
+        const anniversaries = backup.anniversaries ?? []
+
+        const existingAnniversaries =
+            await getAnniversaries()
+
+        let importedAnniversariesCount = 0
+        let skippedAnniversariesCount = 0
+
+        for (const anniversary of anniversaries) {
+            const duplicate =
+                existingAnniversaries.some(
+                    (existingAnniversary) =>
+                        existingAnniversary.title
+                            .trim()
+                            .toLowerCase() ===
+                        anniversary.title
+                            .trim()
+                            .toLowerCase() &&
+                        existingAnniversary.date ===
+                        anniversary.date
+                )
+
+            if (duplicate) {
+                skippedAnniversariesCount++
+                continue
+            }
+
+            await addAnniversary({
+                title: anniversary.title,
+                date:
+                    anniversary.date,
+                notes:
+                    anniversary.notes ?? "",
+            })
+
+            importedAnniversariesCount++
+
+            existingAnniversaries.push({
+                ...anniversary,
+            })
+        }
+
         return {
             success: true,
             message:
-                `Imported ${importedCount} birthdays. Skipped ${skippedCount} duplicates.`,
+                `Imported ${importedBirthdaysCount} birthdays. Skipped ${skippedBirthdaysCount} duplicates.\n` +
+                `Imported ${importedAnniversariesCount} anniversaries. Skipped ${skippedAnniversariesCount} duplicates.`,
         }
 
     } catch (error) {

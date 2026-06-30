@@ -42,9 +42,9 @@ export function useBirthdayForm({
             return
         }
 
-        setName(editingBirthday.name)
+        setName(editingBirthday.title)
         setBirthdate(
-            editingBirthday.birthdate
+            editingBirthday.date
         )
         setNotes(
             editingBirthday.notes || ""
@@ -88,8 +88,8 @@ export function useBirthdayForm({
 
                     await updateBirthday({
                         id: editingBirthday.id,
-                        name,
-                        birthdate,
+                        title: name,
+                        date: birthdate,
                         notes,
                     })
 
@@ -98,8 +98,8 @@ export function useBirthdayForm({
                 } else {
 
                     await addBirthday({
-                        name,
-                        birthdate,
+                        title: name,
+                        date: birthdate,
                         notes,
                     })
                 }
@@ -129,6 +129,8 @@ export function useBirthdayForm({
 
         successMessage,
         errorMessage,
+        setErrorMessage,
+        setSuccessMessage,
 
         handleSubmit,
         cancelEdit,

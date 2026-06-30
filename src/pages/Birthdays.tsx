@@ -1,8 +1,6 @@
-import { useState } from "react"
 import AddBirthdayForm from "@/components/AddBirthdayForm"
 import BirthdayCard from "@/components/BirthdayCard"
 import BirthdayFilters from "@/components/BirthdayFilters"
-import type { Birthday } from "@/types/birthday"
 import {
     filterBirthdays,
 } from "@/utils/birthdayUtils"
@@ -10,25 +8,20 @@ import { useBirthdays } from "@/hooks/useBirthday"
 
 export default function Birthdays() {
 
-    const [editingBirthday, setEditingBirthday] =
-        useState<Birthday | null>(null)
-
-    const [search, setSearch] =
-        useState("")
-
-    const [month, setMonth] =
-        useState("All")
-
-    const [minAge, setMinAge] =
-        useState("")
-
-    const [maxAge, setMaxAge] =
-        useState("")
-
     const {
         birthdays,
         loadBirthdays,
         deleteBirthdayById,
+        editingBirthday,
+        setEditingBirthday,
+        search,
+        setSearch,
+        month,
+        setMonth,
+        minAge,
+        setMinAge,
+        maxAge,
+        setMaxAge,
     } = useBirthdays()
 
     const filteredBirthdays =
@@ -46,28 +39,28 @@ export default function Birthdays() {
         <div className="mx-auto max-w-6xl space-y-6">
             <section
                 className="
-        rounded-xl
-        border
-        border-neutral-800
-        bg-neutral-900
-        p-6
-    "
+                rounded-xl
+                border
+                border-neutral-800
+                bg-neutral-900
+                p-6
+                "
             >
 
                 <h1
                     className="
-            text-3xl
-            font-bold
-        "
+                    text-3xl
+                    font-bold
+                    "
                 >
                     Birthday Management
                 </h1>
 
                 <p
                     className="
-            mt-2
-            text-neutral-400
-        "
+                    mt-2
+                    text-neutral-400
+                    "
                 >
                     Add, edit, import, export,
                     and manage all saved birthdays.

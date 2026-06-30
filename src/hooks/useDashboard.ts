@@ -1,11 +1,13 @@
 import { useBirthdays } from "@/hooks/useBirthday"
 
 import {
-  getDashboardData,
+  getBirthdaySummary,
   getOldestContact,
   getYoungestContact,
   getMostCommonMonth,
-} from "@/utils/dashboardUtils"
+} from "@/utils/birthdayUtils"
+import { useAnniversaries } from "./useAnniversaries"
+import { getAnniversarySummary } from "@/utils/anniversaryUtils"
 
 export function useDashboard() {
   const {
@@ -15,8 +17,13 @@ export function useDashboard() {
     loadBirthdays,
   } = useBirthdays()
 
-  const dashboardData =
-    getDashboardData(birthdays)
+  const {anniversaries} = useAnniversaries()
+
+  const anniversaryDashboardData =
+    getAnniversarySummary(anniversaries)
+
+  const birthdaydashboardData =
+    getBirthdaySummary(birthdays)
 
   const oldestContact =
     getOldestContact(birthdays)
@@ -39,6 +46,7 @@ export function useDashboard() {
     youngestContact,
     mostCommonMonth,
 
-    ...dashboardData,
+    ...birthdaydashboardData,
+    ...anniversaryDashboardData,
   }
 }

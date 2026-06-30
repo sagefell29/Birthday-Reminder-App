@@ -29,6 +29,8 @@ export default function AddBirthdayForm({
     loading,
     successMessage,
     errorMessage,
+    setSuccessMessage,
+    setErrorMessage,
     handleSubmit,
     cancelEdit
   } = useBirthdayForm({
@@ -107,6 +109,8 @@ export default function AddBirthdayForm({
       <FormMessage
         successMessage={successMessage}
         errorMessage={errorMessage}
+        clearSuccess={() => setSuccessMessage("")}
+        clearError={() => setErrorMessage("")}
       />
 
     </form>

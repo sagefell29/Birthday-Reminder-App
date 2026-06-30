@@ -8,14 +8,29 @@ import {
 } from "@/services/birthdayService"
 
 export function useBirthdays() {
-    const [birthdays, setBirthdays] =
-        useState<Birthday[]>([])
-
     const [loading, setLoading] =
         useState(true)
 
+    const [search, setSearch] =
+        useState("")
+
+    const [month, setMonth] =
+        useState("All")
+
+    const [minAge, setMinAge] =
+        useState("")
+
+    const [maxAge, setMaxAge] =
+        useState("")
+
     const [error, setError] =
         useState<string | null>(null)
+
+    const [editingBirthday, setEditingBirthday] =
+        useState<Birthday | null>(null)
+
+    const [birthdays, setBirthdays] =
+        useState<Birthday[]>([])
 
     async function loadBirthdays() {
         try {
@@ -65,11 +80,19 @@ export function useBirthdays() {
 
     return {
         birthdays,
-
         loading,
         error,
-
         loadBirthdays,
         deleteBirthdayById,
+        editingBirthday,
+        setEditingBirthday,
+        search,
+        setSearch,
+        month,
+        setMonth,
+        minAge,
+        setMinAge,
+        maxAge,
+        setMaxAge,
     }
 }

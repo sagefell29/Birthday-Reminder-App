@@ -12,16 +12,13 @@ import Birthdays from "@/pages/Birthdays"
 
 import { initializeDatabase } from "@/database/setup"
 import Settings from "./pages/Settings"
+import Anniversaries from "./pages/Anniversaries"
+import { useNotificationTimer } from "./hooks/useNotificationTimer"
+import { useAppInitializer } from "./hooks/useAppInitializer"
 
 function App() {
 
-  useEffect(() => {
-    async function setup() {
-      await initializeDatabase()
-    }
-
-    setup()
-  }, [])
+  useAppInitializer()
 
   return (
     <HashRouter>
@@ -53,6 +50,11 @@ function App() {
             <Route
               path="/settings"
               element={<Settings />}
+            />
+
+            <Route
+              path="/anniversaries"
+              element={<Anniversaries />}
             />
 
           </Routes>

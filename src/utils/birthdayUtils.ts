@@ -2,7 +2,12 @@ import type { Birthday } from "@/types/birthday"
 
 import {
     getAge,
-    getBirthMonth,
+    getEventMonth,
+    isEventToday,
+    isEventWithinDays,
+    isEventWithinRange,
+    daysUntilEvent,
+    MONTHS
 } from "./dateUtils"
 
 export interface BirthdayFilters {
@@ -12,20 +17,171 @@ export interface BirthdayFilters {
     maxAge: string
 }
 
-export const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]
+export function getTodaysBirthdays(
+    birthdays: Birthday[]
+) {
+    return birthdays.filter(
+        (birthday) =>
+            isEventToday(
+                birthday.date
+            )
+    )
+}
+
+export function getUpcomingBirthdays(
+    birthdays: Birthday[]
+) {
+    return birthdays.filter(
+            (birthday) =>
+                !isEventToday(
+                    birthday.date
+                )
+        )
+        .sort(
+            (a, b) =>
+                daysUntilEvent(
+                    a.date
+                ) -
+                daysUntilEvent(
+                    b.date
+                )
+        )
+        .slice(0, 5)
+}
+
+export function getBirthdaysThisWeek(
+    birthdays: Birthday[]
+) {
+    return birthdays.filter((birthday) =>
+        isEventWithinDays(
+            birthday.date,
+            7
+        )
+    )
+}
+
+export function getBirthdaysThisMonth(
+    birthdays: Birthday[]
+) {
+    return birthdays
+        .filter((birthday) =>
+            isEventWithinRange(
+                birthday.date,
+                8,
+                30
+            )
+        )
+        .sort(
+            (a, b) =>
+                daysUntilEvent(
+                    a.date
+                ) -
+                daysUntilEvent(
+                    b.date
+                )
+        )
+}
+
+export function getBirthdaySummary(
+    birthdays: Birthday[]
+) {
+
+    const todaysBirthdays = getTodaysBirthdays(birthdays)
+
+    const upcomingBirthdays = getUpcomingBirthdays(birthdays)
+
+    const upcomingThisWeek = getBirthdaysThisWeek(birthdays)
+
+    const upcomingThisMonth = getBirthdaysThisMonth(birthdays)
+
+    const totalBirthdays = birthdays.length
+
+    const birthdaysThisMonth = upcomingThisMonth.length
+
+    const birthdaysThisWeek = upcomingThisWeek.length
+
+    const averageAge =
+        birthdays.length === 0
+            ? 0
+            : Math.round(
+                birthdays.reduce(
+                    (sum, birthday) =>
+                        sum +
+                        getAge(birthday.date),
+                    0
+                ) / birthdays.length
+            )
+
+    return {
+        todaysBirthdays,
+        upcomingBirthdays,
+        upcomingThisWeek,
+        upcomingThisMonth,
+        totalBirthdays,
+        birthdaysThisMonth,
+        birthdaysThisWeek,
+        averageAge,
+    }
+}
+
+export function getOldestContact(
+    birthdays: Birthday[]
+) {
+    if (birthdays.length === 0) {
+        return null
+    }
+
+    return birthdays.reduce(
+        (oldest, current) =>
+            getAge(current.date) >
+                getAge(oldest.date)
+                ? current
+                : oldest
+    )
+}
+
+export function getYoungestContact(
+    birthdays: Birthday[]
+) {
+    if (birthdays.length === 0) {
+        return null
+    }
+
+    return birthdays.reduce(
+        (youngest, current) =>
+            getAge(current.date) <
+                getAge(youngest.date)
+                ? current
+                : youngest
+    )
+}
+
+export function getMostCommonMonth(
+    birthdays: Birthday[]
+) {
+
+    const monthCounts =
+        Array(12).fill(0)
+
+    birthdays.forEach(
+        (birthday) => {
+            const month =
+                new Date(
+                    birthday.date
+                ).getMonth()
+
+            monthCounts[month]++
+        }
+    )
+
+    const maxCount =
+        Math.max(...monthCounts)
+
+    const monthIndex =
+        monthCounts.indexOf(maxCount)
+
+    return MONTHS[monthIndex]
+}
 
 export function filterBirthdays(
     birthdays: Birthday[],
@@ -42,7 +198,7 @@ export function filterBirthdays(
         (birthday) => {
 
             const searchMatch =
-                birthday.name
+                birthday.title
                     .toLowerCase()
                     .includes(
                         search.toLowerCase()
@@ -51,14 +207,14 @@ export function filterBirthdays(
             const monthMatch =
                 month === "All"
                     ? true
-                    : getBirthMonth(
-                        birthday.birthdate
+                    : getEventMonth(
+                        birthday.date
                     ) ===
                     MONTHS.indexOf(month)
 
             const age =
                 getAge(
-                    birthday.birthdate
+                    birthday.date
                 )
 
             const minAgeMatch =

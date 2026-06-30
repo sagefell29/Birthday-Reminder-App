@@ -1,7 +1,7 @@
 import type { Birthday } from "@/types/birthday"
 import {
     getAge,
-    daysUntilBirthday,
+    daysUntilEvent,
 } from "@/utils/dateUtils"
 
 interface Props {
@@ -19,20 +19,20 @@ export default function UpcomingBirthdayCard({
 
                 <div>
                     <h3 className="font-semibold">
-                        {birthday.name}
+                        {birthday.title}
                     </h3>
 
                     <p className="text-sm text-neutral-400">
                         Turning {getAge(
-                            birthday.birthdate
+                            birthday.date
                         ) + 1}
                     </p>
                 </div>
 
                 <div className="text-right">
                     <p className="font-semibold">
-                        {daysUntilBirthday(
-                            birthday.birthdate
+                        {daysUntilEvent(
+                            birthday.date
                         )} days
                     </p>
                 </div>

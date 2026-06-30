@@ -1,16 +1,18 @@
 import { notify } from "@/services/notificationService"
+import type { Anniversary } from "@/types/anniversary"
 import type { Birthday } from "@/types/birthday"
 import { buildTodayMessage, markNotificationSent, wasNotificationSentToday } from "@/utils/notificationUtils"
 import { useEffect } from "react"
 
 export function useBirthdayNotifications(
-    todaysBirthdays: Birthday[]
+    todaysBirthdays: Birthday[],
+    todaysAnniversaries: Anniversary[]
 ) {
 
     useEffect(() => {
 
         if (
-            todaysBirthdays.length === 0
+            todaysBirthdays.length === 0 && todaysAnniversaries.length === 0
         ) {
             return
         }
@@ -23,7 +25,8 @@ export function useBirthdayNotifications(
 
         const message =
             buildTodayMessage(
-                todaysBirthdays
+                todaysBirthdays,
+                todaysAnniversaries
             )
 
         if (!message) {

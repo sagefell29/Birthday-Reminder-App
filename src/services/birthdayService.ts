@@ -9,7 +9,7 @@ export async function addBirthday(data: Birthday) {
     INSERT INTO birthdays (name, birthdate, notes)
     VALUES (?, ?, ?)
     `,
-    [data.name, data.birthdate, data.notes || ""]
+    [data.title, data.date, data.notes || ""]
   )
 }
 
@@ -18,7 +18,8 @@ export async function getBirthdays(): Promise<Birthday[]> {
 
   return await db.select(
     `
-    SELECT *
+    SELECT 
+    id, name AS title, birthdate AS date, notes
     FROM birthdays
     ORDER BY birthdate ASC
     `
@@ -50,8 +51,8 @@ export async function updateBirthday(data: Birthday) {
     WHERE id = ?
     `,
     [
-      data.name,
-      data.birthdate,
+      data.title,
+      data.date,
       data.notes || "",
       data.id,
     ]

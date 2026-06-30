@@ -14,7 +14,8 @@ export function useAsyncOperation() {
         useState("")
 
     async function execute<T>(
-        operation: () => Promise<T>
+        operation: () => Promise<T>,
+        successMessage?: string
     ): Promise<T | undefined> {
 
         setLoading(true)

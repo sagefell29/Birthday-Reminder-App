@@ -1,6 +1,6 @@
 import { type Birthday } from "@/types/birthday"
 import {
-  formatBirthdayDate,
+  formatEventDate,
 } from "@/utils/dateUtils"
 
 interface Props {
@@ -26,11 +26,11 @@ export default function BirthdayCard({
 
         <div>
           <h3 className="text-lg font-semibold">
-            {birthday.name}
+            {birthday.title}
           </h3>
 
           <p className="text-sm text-neutral-400">
-            {formatBirthdayDate(birthday.birthdate)}
+            {formatEventDate(birthday.date)}
           </p>
         </div>
 

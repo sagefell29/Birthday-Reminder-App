@@ -4,11 +4,11 @@ import FormMessage from "@/components/ui/FormMessage"
 import { useImportExport } from "@/hooks/useImportExport"
 
 interface Props {
-    reloadBirthdays: () => Promise<void>
+    reloadData: () => Promise<void>
 }
 
 export default function ImportExportSection({
-    reloadBirthdays,
+    reloadData,
 }: Props) {
 
     const {
@@ -17,7 +17,7 @@ export default function ImportExportSection({
         importOperation,
         exportOperation,
     } = useImportExport(
-        reloadBirthdays
+        reloadData
     )
 
     return (
@@ -35,7 +35,7 @@ export default function ImportExportSection({
                     text-white
                     hover:bg-green-700"
                 >
-                    Export Birthdays
+                    Export Events
                 </LoadingButton>
 
                 <LoadingButton
@@ -49,7 +49,7 @@ export default function ImportExportSection({
                         hover:bg-blue-700
                     "
                 >
-                    Import Birthdays
+                    Import Events
                 </LoadingButton>
 
             </div>
@@ -61,6 +61,8 @@ export default function ImportExportSection({
                 errorMessage={
                     exportOperation.errorMessage
                 }
+                clearSuccess={() => exportOperation.setSuccessMessage("")}
+                clearError={() => exportOperation.setErrorMessage("")}
             />
 
             <FormMessage
@@ -70,6 +72,8 @@ export default function ImportExportSection({
                 errorMessage={
                     importOperation.errorMessage
                 }
+                clearSuccess={() => importOperation.setSuccessMessage("")}
+                clearError={() => importOperation.setErrorMessage("")}
             />
 
         </div>

@@ -1,9 +1,8 @@
 import BirthdayCard from "@/components/BirthdayCard"
 import StatsCard from "@/components/StatsCard"
 import { useDashboard } from "@/hooks/useDashboard"
-import { notify } from "@/services/notificationService"
 import UpcomingBirthdayCard from "@/components/UpcomingBirthdayCard"
-import { useBirthdayNotifications } from "@/hooks/useBirthdayNotifications"
+import type { Birthday } from "@/types/birthday"
 
 export default function Dashboard() {
 
@@ -13,12 +12,10 @@ export default function Dashboard() {
         upcomingThisMonth,
         totalBirthdays,
         averageAge,
-        oldestContact,
-        youngestContact,
+        // oldestContact,
+        // youngestContact,
         mostCommonMonth,
     } = useDashboard()
-
-    useBirthdayNotifications(todaysBirthdays)
 
     return (
         <div className="space-y-6">
@@ -80,7 +77,7 @@ export default function Dashboard() {
                 ) : (
                     <div className="grid gap-4">
                         {todaysBirthdays.map(
-                            (birthday) => (
+                            (birthday: Birthday) => (
                                 <BirthdayCard
                                     key={birthday.id}
                                     birthday={birthday}
@@ -104,7 +101,7 @@ export default function Dashboard() {
                     </div>
                 ) : (
                     <div className="grid gap-4">
-                        {upcomingThisWeek.map((birthday) => (
+                        {upcomingThisWeek.map((birthday: Birthday) => (
                             <UpcomingBirthdayCard
                                 key={birthday.id}
                                 birthday={birthday}
@@ -126,7 +123,7 @@ export default function Dashboard() {
                     </div>
                 ) : (
                     <div className="grid gap-4">
-                        {upcomingThisMonth.map((birthday) => (
+                        {upcomingThisMonth.map((birthday: Birthday) => (
                             <UpcomingBirthdayCard
                                 key={birthday.id}
                                 birthday={birthday}
@@ -134,27 +131,6 @@ export default function Dashboard() {
                         ))}
                     </div>)}
             </section>
-
-            <button
-                onClick={() =>
-                    notify(
-                        "Birthday Reminder",
-                        "Test notification"
-                    )
-                }
-            >
-                Test Notification
-            </button>
-
-            <button
-                onClick={() =>
-                    localStorage.removeItem(
-                        "birthday_notification_date"
-                    )
-                }
-            >
-                Reset Notification State
-            </button>
 
         </div>
     )

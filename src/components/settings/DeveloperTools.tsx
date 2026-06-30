@@ -62,6 +62,8 @@ export default function DeveloperTools() {
                 errorMessage={
                     resetOperation.errorMessage
                 }
+                clearSuccess={() => resetOperation.setSuccessMessage("")}
+                clearError={() => resetOperation.setErrorMessage("")}
             />
 
         </div>
